@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
-import logging, time
+import logging
 import sqlite3
-import ujson as json
 
 class dicts:
     def __init__(self, dicts_path) -> None:
@@ -17,6 +16,8 @@ class dicts:
                 self._dbs.append(sqlite3.connect(f))
             except Exception as e:
                 logging.error(f"Failed to load {f}: {e}. Skipping.")
+        if len(self._dbs) == 0:
+            logging.warn("No dictionaries found.")
 
     def query(self, query:str) -> list[str]:
         '''

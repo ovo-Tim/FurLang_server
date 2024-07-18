@@ -1,6 +1,5 @@
 import logging
 from .nlp import lemmatize
-import ujson as json
 from .database import datas
 from flask import Flask, request
 from flask_restful import Resource, Api
@@ -35,6 +34,8 @@ class service(Resource):
 
     def get_marking_words(self, words:list[tuple[str, str]], sentence:str|None=None) -> list:
         res = []
+        tmp = []
+        words = [word for word in words if word[1] not in tmp and not tmp.append(word[0])]
         for (origin, lemmatized) in words:
             info = self.database.get_word(lemmatized, sentence=sentence)
             if info is None or info['familiarity'] > 0.85:

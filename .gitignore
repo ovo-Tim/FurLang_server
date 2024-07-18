@@ -1,7 +1,5 @@
 _data.json
 **/__pycache__
 .vscode
-MDicts/ecdict
 data.db
 data.db-journal
-Dicts/dict.db

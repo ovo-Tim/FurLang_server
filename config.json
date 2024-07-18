@@ -1,5 +1,6 @@
 {
     "db_path": "./data.db",
     "excluded_words_path": "./excluded_words.json",
-    "port": 1028
+    "port": 1028,
+    "dicts_path": "./Dicts"
 }
