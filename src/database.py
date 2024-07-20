@@ -9,6 +9,7 @@ import sqlite3
 import os
 from types import FunctionType
 import re
+import copy
 
 MAX_OPERATION_SIENCE_SKIP = 10 # SQL won't save datas untill request times exceed MAX_OPERATION_SIENCE_SKIP.
 
@@ -173,7 +174,9 @@ class datas():
         if not (word in self._db.keys()):
             if auto_create:
                 self.add_NewWord(word, sentence=[sentence] if sentence is not None else [])
-                return self._db[word].val
+                res = copy.copy(self._db[word].val)
+                res['word'] = word
+                return res
             else:
                 logging.error(f"datas.get_word: Can't find word '{ word }', and auto_create is disabled.")
                 return None
@@ -189,7 +192,18 @@ class datas():
                     updated.append(sentence)
                     self._db[word]['sentences'] = updated
 
-        return self._db[word].val
+        res = copy.copy(self._db[word].val)
+        res['word'] = word
+        return res
+
+    def update_sentences(self, word:str, new: list[str]):
+        self.set_word(word, "sentences", new)
+
+    def update_notes(self, word:str, new: list[str]):
+        self.set_word(word, "notes", new)
+
+    def set_word(self, word:str, key:str, value):
+        self._db.set_word(word, key, value)
 
     def __getitem__(self, key):
         '''

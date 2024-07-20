@@ -6,7 +6,7 @@ import sqlite3
 class dicts:
     def __init__(self, dicts_path) -> None:
         self._dicts_path = Path(dicts_path)
-        self._dbs = []
+        self._dbs: list[sqlite3.Connection] = []
         self.load()
 
     def load(self):
@@ -19,11 +19,12 @@ class dicts:
         if len(self._dbs) == 0:
             logging.warn("No dictionaries found.")
 
-    def query(self, query:str) -> list[str]:
+    def query(self, query:str) -> list[str|None]:
         '''
             Search in all dictionaries, return a list of html.
         '''
-        return [d.execute("SELECT * FROM words WHERE word = ?", (query))[2] for d in self._dbs]
+        query_res = [d.execute("SELECT * FROM stardict WHERE word = ?", (query,)).fetchone() for d in self._dbs]
+        return [res[2] if res is not None else None for res in query_res]
 
 
 
