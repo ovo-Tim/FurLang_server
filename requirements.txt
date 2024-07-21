@@ -4,3 +4,4 @@ spacy
 flask-restful
 gevent
 flask-cors
+scipy
