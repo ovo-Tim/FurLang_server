@@ -28,12 +28,10 @@ jobs:
           nuitka-version: main
           script-name: main.py
           standalone: on
+          include-data-dir: Dicts=Dicts
           include-data-files: |
-            ./Dicts/*=Dicts/
             excluded_words.json=excluded_words.json
             config.json=config.json
-          enable-plugins: numpy
-
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
