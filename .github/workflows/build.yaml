@@ -1,6 +1,11 @@
 name: Nuitka Build
 on:
-    workflow_dispatch:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release Tag'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -33,8 +38,10 @@ jobs:
             excluded_words.json=excluded_words.json
             config.json=config.json
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+      - uses: ncipollo/release-action@v1
         with:
-          name: ${{ runner.os }} Build
-          path: build/main.dist
+          tag: ${{ github.event.inputs.release_tag }}
+          name: Release ${{ github.event.inputs.release_tag }}
+          body: Action auto release
+          draft: true
+          token: ${{ secrets.GITHUB_TOKEN }}
