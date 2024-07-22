@@ -45,3 +45,4 @@ jobs:
           body: Action auto release
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          bodyFile: build/*
