@@ -38,9 +38,12 @@ jobs:
             excluded_words.json=excluded_words.json
             config.json=config.json
 
-      - uses: montudor/action-zip@v1
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.5
         with:
-          args: zip -qq -r ${{ matrix.os }}.zip build/main.dist
+          type: 'zip'
+          filename: ${{ matrix.os }}.zip
+          path: build/main.dist
 
       - uses: ncipollo/release-action@v1
         with:
