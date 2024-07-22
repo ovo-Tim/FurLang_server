@@ -38,6 +38,10 @@ jobs:
             excluded_words.json=excluded_words.json
             config.json=config.json
 
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r ${{ matrix.os }}.zip build/main.dist
+
       - uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.event.inputs.release_tag }}
@@ -45,4 +49,4 @@ jobs:
           body: Action auto release
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          bodyFile: build/*
+          bodyFile: ${{ matrix.os }}.zip
