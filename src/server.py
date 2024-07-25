@@ -7,6 +7,7 @@ from gevent import pywsgi
 from flask_cors import CORS
 from src.dicts import dicts
 
+
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
@@ -40,6 +41,10 @@ class service(Resource):
                 return True
             case 'get_info':
                 return self.database.get_word(data, update=False)
+            case 'get_statistic':
+                return self.database.statistic.get()
+            case 'learned_count':
+                self.database.get_learned()
             case 'test':
                 return 'FurLang!'
             case _:
@@ -56,7 +61,7 @@ class service(Resource):
             res.append((origin, info))
         return res
 
-def init(database, dictionary,port:int=1028):
+def init(database, dictionary, port:int=1028):
     api.add_resource(service, '/', resource_class_args=[database, dictionary])
     logging.info(f"Start service on {port}")
     return pywsgi.WSGIServer(('127.0.0.1', port), app)

@@ -1,0 +1,7 @@
+{
+    "db_path": "~/.furlang/data.db",
+    "excluded_words_path": "~/.furlang/excluded_words.json",
+    "statistic_path": "~/.furlang/statistic.json",
+    "port": 1028,
+    "dicts_path": "./Dicts"
+}

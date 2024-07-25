@@ -33,10 +33,9 @@ jobs:
           nuitka-version: main
           script-name: main.py
           standalone: on
-          include-data-dir: Dicts=Dicts
-          include-data-files: |
-            excluded_words.json=excluded_words.json
-            config.json=config.json
+          include-data-dir: |
+            Dicts=Dicts
+            defaults=defaults
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5

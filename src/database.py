@@ -10,6 +10,7 @@ import os
 from types import FunctionType
 import re
 import copy
+from src import statistic as sta
 
 MAX_OPERATION_SIENCE_SKIP = 10 # SQL won't save datas untill request times exceed MAX_OPERATION_SIENCE_SKIP.
 
@@ -29,7 +30,7 @@ class _hook_dict:
         self.__word = word
         self.__set_word = set_word
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> Any:
         if (key == 'sentences' or key == 'notes') and self.val[key] is None:
             return []
         return self.val[key]
@@ -97,8 +98,7 @@ class words_db:
 
     def keys(self):
         if not self._keys_cache_available:
-            self._keys_cache = self._db.execute("SELECT word FROM words").fetchall()
-            self._keys_cache = [i[0] for i in self._keys_cache]
+            self._keys_cache = [i[0] for i in self._db.execute("SELECT word FROM words").fetchall()]
             self._keys_cache_available = True
 
         return self._keys_cache
@@ -119,15 +119,22 @@ class words_db:
         self._db.execute(f"UPDATE words SET {key} = ? WHERE word = ?", (value, word))
         self.__save()
 
+    def get_learned(self) -> int:
+        return self._db.execute('SELECT COUNT(*) FROM words WHERE familiarity > 0.85').fetchone()[0]
+
+    def __len__(self):
+        return len(self.keys())
+
 class datas():
     '''
         An interface for exchanging data.
         DO NOT read/write _db directly, it's possible we change the data storage mode.
     '''
-    def __init__(self, db_path, excluded_words_path) -> None:
+    def __init__(self, db_path, excluded_words_path, statistic:sta.statistic) -> None:
         self._db_path = db_path
         self._excluded_words_path = excluded_words_path
         self._save_request_times = 0
+        self.statistic = statistic
 
         s = time.time()
         with open(self._excluded_words_path,) as f:
@@ -186,14 +193,14 @@ class datas():
             self._db[word]['frequency'] += 1
             self._db[word]['familiarity'] += calculateWordFamiliarity(self._db[word]['frequency'])
             self._db[word]['last_used_date'] = str(datetime.now().date())
-            if sentence is not None:
-                if not sentence in self._db[word]['sentences']:
-                    updated = self._db[word]['sentences']
-                    updated.append(sentence)
-                    self._db[word]['sentences'] = updated
+            if (sentence is not None) and (not sentence in self._db[word]['sentences']):
+                updated = self._db[word]['sentences']
+                updated.append(sentence)
+                self._db[word]['sentences'] = updated
 
         res = copy.copy(self._db[word].val)
         res['word'] = word
+        self.statistic.add(self._db[word]['familiarity'])
         return res
 
     def update_sentences(self, word:str, new: list[str]):
@@ -221,3 +228,9 @@ class datas():
         '''
 
         self._db['word'][key[0]][key[1]] = value
+
+    def __len__(self):
+        return len(self._db)
+
+    def get_learned(self) -> int:
+        return self._db.get_learned()
