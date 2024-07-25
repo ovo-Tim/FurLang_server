@@ -41,14 +41,27 @@ jobs:
         uses: thedoctor0/zip-release@0.7.5
         with:
           type: 'zip'
-          filename: ${{ matrix.os }}.zip
+          filename: FurLang_server-${{ matrix.os }}.zip
           path: build/main.dist
 
-      - uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ github.event.inputs.release_tag }}
-          name: Release ${{ github.event.inputs.release_tag }}
-          body: Action auto release
-          draft: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          bodyFile: ${{ matrix.os }}.zip
+      - name: Run tree command on Ubuntu
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt install tree
+          tree
+
+      - name: Release
+        run: |
+          gh release create ${{ github.event.inputs.release_tag }} --title "Release ${{ github.event.inputs.release_tag }}" \
+          --notes "Action auto release"
+          gh release upload ${{ github.event.inputs.release_tag }} FurLang_server-${{ matrix.os }}.zip
+
+
+      # - uses: ncipollo/release-action@v1
+      #   with:
+      #     tag: ${{ github.event.inputs.release_tag }}
+      #     name: Release ${{ github.event.inputs.release_tag }}
+      #     body: Action auto release
+      #     draft: true
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     bodyFile: FurLang_server-${{ matrix.os }}.zip
