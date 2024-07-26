@@ -38,7 +38,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
             python-version: '3.x'
-            cache: 'pip'
 
       - name: Install Dependencies
         run: |
@@ -48,7 +47,7 @@ jobs:
         run:  |
           pip install nuitka
           python -m spacy download en_core_web_sm
-          nuitka --standalone --include-data-dir=Dicts=Dicts --include-data-dir=defaults=defaults --assume-yes-for-downloads --output-dir=build --spacy-language-model=en_core_web_sm --clang --static-libpython=yes --script-name=main.py
+          nuitka --standalone --include-data-dir=Dicts=Dicts --include-data-dir=defaults=defaults --assume-yes-for-downloads --output-dir=build --spacy-language-model=en_core_web_sm --clang --script-name=main.py
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5
