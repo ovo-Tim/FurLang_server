@@ -8,6 +8,18 @@ on:
         type: string
 
 jobs:
+  create:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Release
+        run: |
+          gh release create ${{ github.event.inputs.release_tag }} --title "Release ${{ github.event.inputs.release_tag }}" \
+          --notes "Action auto release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -15,6 +27,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     permissions:
       contents: write
+    needs: create
 
     steps:
       # Check-out repository
@@ -54,8 +67,6 @@ jobs:
 
       - name: Release
         run: |
-          gh release create ${{ github.event.inputs.release_tag }} --title "Release ${{ github.event.inputs.release_tag }}" \
-          --notes "Action auto release"
           gh release upload ${{ github.event.inputs.release_tag }} FurLang_server-${{ matrix.os }}.zip
         env:
           GH_TOKEN: ${{ github.token }}
