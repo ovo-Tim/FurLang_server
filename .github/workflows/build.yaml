@@ -43,6 +43,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          curl -Ljo ./Dicts/dict.db https://github.com/ovo-Tim/mdict2sql/releases/download/example/dict.db
           pip install -r requirements.txt
 
       - name: Nuitka build
