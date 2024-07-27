@@ -17,7 +17,7 @@ jobs:
       - name: Release
         run: |
           gh release create ${{ github.event.inputs.release_tag }} --title "Release ${{ github.event.inputs.release_tag }}" \
-          --notes "Action auto release"
+          --notes "Action auto release" --draft
         env:
           GH_TOKEN: ${{ github.token }}
 
