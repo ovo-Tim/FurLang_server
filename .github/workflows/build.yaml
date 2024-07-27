@@ -53,6 +53,7 @@ jobs:
 
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
+        continue-on-error: true
         with:
           file: build/main.dist/*
           args: --ultra-brute

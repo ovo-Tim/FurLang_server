@@ -4,3 +4,4 @@ _data.json
 data.db
 data.db-journal
 out
+.ruff_cache
