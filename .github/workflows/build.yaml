@@ -56,7 +56,9 @@ jobs:
         uses: svenstaro/upx-action@v2
         continue-on-error: true
         with:
-          file: build/main.dist/*
+          file: |
+            build/main.dist/*.bin
+            build/main.dist/*.exe
           args: --ultra-brute
           strip: false
 
