@@ -20,7 +20,7 @@ jobs:
           --notes "Action auto release"
         env:
           GH_TOKEN: ${{ github.token }}
-          
+
   build:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -33,6 +33,8 @@ jobs:
     steps:
       # Check-out repository
       - uses: actions/checkout@v4
+        with:
+          lfs: true
 
       # Setup Python
       - uses: actions/setup-python@v5
@@ -48,6 +50,12 @@ jobs:
           pip install nuitka
           python -m spacy download en_core_web_sm
           nuitka --standalone --include-data-dir=Dicts=Dicts --include-data-dir=defaults=defaults --assume-yes-for-downloads --output-dir=build --spacy-language-model=en_core_web_sm --clang --script-name=main.py
+
+      - name: Compress binaries
+        uses: svenstaro/upx-action@v2
+        with:
+          files: build/main.dist
+          args: --ultra-brute
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5
