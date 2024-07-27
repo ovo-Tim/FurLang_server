@@ -57,6 +57,8 @@ jobs:
         with:
           file: build/main.dist/*
           args: --ultra-brute
+          strip: false
+
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5

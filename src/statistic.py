@@ -32,15 +32,15 @@ class statistic:
     def get(self) -> dict:
         return self.data
 
-    def __ins(self, fam: float):
+    def __ins(self, fam: float, d:str):
         if fam > 0.85:
-            self.data['learned'] += 1
+            self.data[d]['learned'] += 1
         elif fam > 0.6:
-            self.data['familiar'] += 1
+            self.data[d]['familiar'] += 1
         elif fam > 0.4:
-            self.data['unfamiliar'] += 1
+            self.data[d]['unfamiliar'] += 1
         else:
-            self.data['new'] += 1
+            self.data[d]['new'] += 1
 
     def add(self, fam:float):
         d = datetime.now().strftime("%Y-%m-%d")
@@ -51,5 +51,5 @@ class statistic:
                 'unfamiliar': 0,
                 'new': 0
             }
-        self.__ins(fam)
+        self.__ins(fam, d)
         self.save()

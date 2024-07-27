@@ -166,8 +166,6 @@ class datas():
         '''
             Return None if word is in excluded_words.
         '''
-
-        word = word.lower()
         if lemmatize:
             word = nlp.lemmatize(word)[0][1]
 

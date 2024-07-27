@@ -14,5 +14,5 @@ def lemmatize(sentence:str, exclusion_list:list[str]=[]) -> list[tuple[str, str]
     for i in nlp(sentence):
         if (not re.fullmatch(r'\b[A-Za-z][a-z]*\b', i.text)) or (i in exclusion_list) or (len(i)<3): # Filter non-words
             continue
-        res.append((i.text, i._.lemma()))
+        res.append((i.text, i._.lemma().lower()))
     return res
