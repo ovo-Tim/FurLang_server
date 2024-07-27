@@ -3,7 +3,7 @@
     so that we can support other languages or replace the back-end easily.
 '''
 import spacy
-import lemminflect
+import lemminflect  # noqa: F401
 import re
 
 SPACY_MOUDLE = 'en_core_web_sm' # 12Mb

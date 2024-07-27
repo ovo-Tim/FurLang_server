@@ -92,7 +92,7 @@ class words_db:
         last_used_date = value['last_used_date']
         sentences = json.dumps(value['sentences'])
         notes = json.dumps(value['notes'])
-        self._db.execute(f"INSERT OR REPLACE INTO words VALUES (?, ?, ?, ?, ?, ?)", (key, fer, fam, sentences, last_used_date, notes))
+        self._db.execute("INSERT OR REPLACE INTO words VALUES (?, ?, ?, ?, ?, ?)", (key, fer, fam, sentences, last_used_date, notes))
         self._keys_cache_available = False
         self.__save()
 
@@ -178,7 +178,7 @@ class datas():
         if not good_sentence(sentence):
             sentence = None
 
-        if not (word in self._db.keys()):
+        if word not in self._db.keys():
             if auto_create:
                 self.add_NewWord(word, sentence=[sentence] if sentence is not None else [])
                 return self._ret_info(self._db[word].val, word)
@@ -202,7 +202,7 @@ class datas():
         self._db[word]['frequency'] += 1
         self._db[word]['familiarity'] += calculateWordFamiliarity(self._db[word]['frequency'])
         self._db[word]['last_used_date'] = str(datetime.now().date())
-        if (sentence is not None) and (not sentence in self._db[word]['sentences']):
+        if (sentence is not None) and (sentence not in self._db[word]['sentences']):
             updated = self._db[word]['sentences']
             updated.append(sentence)
             self._db[word]['sentences'] = updated
