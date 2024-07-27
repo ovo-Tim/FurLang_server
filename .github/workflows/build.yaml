@@ -8,11 +8,27 @@ on:
         type: string
 
 jobs:
+  create:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release
+        run: |
+          gh release create ${{ github.event.inputs.release_tag }} --title "Release ${{ github.event.inputs.release_tag }}" \
+          --notes "Action auto release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+    permissions:
+      contents: write
+    needs: create
 
     steps:
       # Check-out repository
@@ -22,27 +38,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
             python-version: '3.x'
-            cache: 'pip'
 
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
 
-      - uses: Nuitka/Nuitka-Action@main
-        with:
-          nuitka-version: main
-          script-name: main.py
-          standalone: on
-          include-data-dir: |
-            Dicts=Dicts
-            defaults=defaults
+      - name: Nuitka build
+        run:  |
+          pip install nuitka
+          python -m spacy download en_core_web_sm
+          nuitka --standalone --include-data-dir=Dicts=Dicts --include-data-dir=defaults=defaults --assume-yes-for-downloads --output-dir=build --spacy-language-model=en_core_web_sm --clang --script-name=main.py
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5
         with:
           type: 'zip'
           filename: FurLang_server-${{ matrix.os }}.zip
-          path: build/main.dist
+          path: build
+          exclusions:  'main.build'
 
       - name: Run tree command on Ubuntu
         if: runner.os == 'Linux'
@@ -52,8 +65,6 @@ jobs:
 
       - name: Release
         run: |
-          gh release create ${{ github.event.inputs.release_tag }} --title "Release ${{ github.event.inputs.release_tag }}" \
-          --notes "Action auto release"
           gh release upload ${{ github.event.inputs.release_tag }} FurLang_server-${{ matrix.os }}.zip
         env:
           GH_TOKEN: ${{ github.token }}
