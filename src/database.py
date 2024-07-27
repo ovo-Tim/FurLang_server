@@ -181,27 +181,31 @@ class datas():
         if not (word in self._db.keys()):
             if auto_create:
                 self.add_NewWord(word, sentence=[sentence] if sentence is not None else [])
-                res = copy.copy(self._db[word].val)
-                res['word'] = word
-                return res
+                return self._ret_info(self._db[word].val, word)
             else:
                 logging.error(f"datas.get_word: Can't find word '{ word }', and auto_create is disabled.")
                 return None
 
         # Update word info
         if update:
-            self._db[word]['frequency'] += 1
-            self._db[word]['familiarity'] += calculateWordFamiliarity(self._db[word]['frequency'])
-            self._db[word]['last_used_date'] = str(datetime.now().date())
-            if (sentence is not None) and (not sentence in self._db[word]['sentences']):
-                updated = self._db[word]['sentences']
-                updated.append(sentence)
-                self._db[word]['sentences'] = updated
+            self._word_update(word, sentence)
 
-        res = copy.copy(self._db[word].val)
-        res['word'] = word
         self.statistic.add(self._db[word]['familiarity'])
+        return self._ret_info(self._db[word].val, word)
+
+    def _ret_info(self, res:dict, word:str):
+        res = copy.copy(res)
+        res['word'] = word
         return res
+
+    def _word_update(self, word:str, sentence:str|None=None):
+        self._db[word]['frequency'] += 1
+        self._db[word]['familiarity'] += calculateWordFamiliarity(self._db[word]['frequency'])
+        self._db[word]['last_used_date'] = str(datetime.now().date())
+        if (sentence is not None) and (not sentence in self._db[word]['sentences']):
+            updated = self._db[word]['sentences']
+            updated.append(sentence)
+            self._db[word]['sentences'] = updated
 
     def update_sentences(self, word:str, new: list[str]):
         self.set_word(word, "sentences", new)
