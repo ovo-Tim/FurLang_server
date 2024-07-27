@@ -54,7 +54,7 @@ jobs:
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
         with:
-          files: build/main.dist
+          file: build/main.dist/*
           args: --ultra-brute
 
       - name: Archive Release
@@ -62,8 +62,7 @@ jobs:
         with:
           type: 'zip'
           filename: FurLang_server-${{ matrix.os }}.zip
-          path: build
-          exclusions:  'main.build'
+          path: build/main.dist
 
       - name: Run tree command on Ubuntu
         if: runner.os == 'Linux'
