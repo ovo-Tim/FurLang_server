@@ -50,34 +50,25 @@ jobs:
         run:  |
           pip install nuitka
           python -m spacy download en_core_web_sm
-          nuitka --standalone --onefile --include-data-dir=Dicts=Dicts --include-data-dir=defaults=defaults --assume-yes-for-downloads --output-dir=build --spacy-language-model=en_core_web_sm --clang --script-name=main.py
+          nuitka --standalone --include-data-dir=Dicts=Dicts --include-data-dir=defaults=defaults --assume-yes-for-downloads --output-dir=build --spacy-language-model=en_core_web_sm --clang --script-name=main.py
 
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
         continue-on-error: true
         with:
           file: |
-            build/main.bin
-            build/main.exe
+            build/main.dist/*.bin
+            build/main.dist/*.exe
           args: --ultra-brute
           strip: false
 
 
-      - name: Archive Release exe
-        if: runner.os == 'Windows'
+      - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5
         with:
           type: 'zip'
           filename: FurLang_server-${{ matrix.os }}.zip
-          path: build/main.exe
-
-      - name: Archive Release exe
-        if: runner.os != 'Windows'
-        uses: thedoctor0/zip-release@0.7.5
-        with:
-          type: 'zip'
-          filename: FurLang_server-${{ matrix.os }}.zip
-          path: build/main.bin
+          path: build/main.dist
 
       - name: Run tree command on Ubuntu
         if: runner.os == 'Linux'
