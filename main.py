@@ -17,6 +17,8 @@ class _conf:
             # conf_dir.mkdir(parents=True)
             shutil.copytree(f'{dirname(__file__)}/defaults', conf_dir)
 
+        logging.info(f"Load configs from {conf_dir}")
+
         with open(conf_dir/'config.json') as f:
             self.conf = ujson.load(f)
 
@@ -33,5 +35,5 @@ datas = database.datas(conf['db_path'], conf['excluded_words_path'], sta)
 dictionary = dicts.dicts(conf['dicts_path'])
 ser = server.init(datas, dictionary, port=conf['port'])
 
-if __file__ == '__main__':
+if __name__ == '__main__':
     ser.serve_forever()

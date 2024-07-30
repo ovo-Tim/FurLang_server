@@ -59,11 +59,13 @@ class words_db:
         else:
             _init = False
         self._db = sqlite3.connect(path)
+        logging.info("Connected to database")
         # self.cursor.execute('BEGIN TRANSACTION')
         if _init:
             self.init_db()
 
     def init_db(self):
+        logging.info("Init database")
         self._db.execute("""
             CREATE TABLE words(
                 word TEXT PRIMARY KEY NOT NULL,
