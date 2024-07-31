@@ -8,7 +8,8 @@ from os.path import dirname
 from pathlib import Path
 import shutil
 from typing import Any
-logging.basicConfig(level=logging.INFO)
+import sys
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class _conf:
     def __init__(self, conf_dir:Path) -> None:
