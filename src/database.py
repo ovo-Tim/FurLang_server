@@ -12,7 +12,7 @@ import re
 import copy
 from src import statistic as sta
 
-MAX_OPERATION_SIENCE_SKIP = 10 # SQL won't save datas untill request times exceed MAX_OPERATION_SIENCE_SKIP.
+MAX_OPERATION_SIENCE_SKIP = 15 # SQL won't save datas untill request times exceed MAX_OPERATION_SIENCE_SKIP.
 
 def calculateWordFamiliarity(frequency: int)->float:
     return round(float(norm.pdf(frequency, 6, 2.1)), 2)

@@ -12,7 +12,8 @@ nlp = spacy.load(SPACY_MOUDLE)
 def lemmatize(sentence:str, exclusion_list:list[str]=[]) -> list[tuple[str, str]]:
     res = []
     for i in nlp(sentence):
-        if (not re.fullmatch(r'\b[A-Za-z][a-z]*\b', i.text)) or (i in exclusion_list) or (len(i)<3): # Filter non-words
+        lemmaed = i._.lemma().lower()
+        if (not re.fullmatch(r'\b[A-Za-z][a-z]*\b', lemmaed)) or (lemmaed in exclusion_list) or (len(lemmaed)<3): # Filter non-words
             continue
-        res.append((i.text, i._.lemma().lower()))
+        res.append((i.text, lemmaed))
     return res
