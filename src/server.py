@@ -44,7 +44,7 @@ class service(Resource):
             case 'get_statistic':
                 return self.database.statistic.get()
             case 'learned_count':
-                return (self.database.get_learned(), len(self.database))
+                return [self.database.get_learned(), len(self.database)]
             case 'test':
                 return 'FurLang!'
             case _:
