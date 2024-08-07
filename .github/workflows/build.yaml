@@ -45,12 +45,20 @@ jobs:
         run: |
           curl -Ljo ./Dicts/dict.db https://github.com/ovo-Tim/mdict2sql/releases/download/example/dict.db
           pip install -r requirements.txt
+          python -m spacy download en_core_web_sm
 
       - name: Nuitka build
         run:  |
           pip install nuitka
-          python -m spacy download en_core_web_sm
           nuitka --standalone --include-data-dir=Dicts=Dicts --include-data-dir=defaults=defaults --assume-yes-for-downloads --output-dir=build --spacy-language-model=en_core_web_sm --clang --script-name=main.py
+
+      - name: fix lemma
+        run: |
+          mkdir build/main.dist/lemminflect
+          mkdir build/main.dist/lemminflect/resources
+          wget -P build/main.dist/lemminflect/resources https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/lemma_lu.csv.gz
+          wget -P build/main.dist/lemminflect/resources https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/model_infl.pkl.gz
+          wget -P build/main.dist/lemminflect/resources https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/model_lemma.pkl.gz
 
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
