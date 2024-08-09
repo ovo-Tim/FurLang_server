@@ -40,7 +40,7 @@ class service(Resource):
                 self.database.update_notes(data[0], data[1])
                 return True
             case 'get_info':
-                return self.database.get_word(data, update=False)
+                return self.database.get_word(data, update=False, auto_create=False)
             case 'get_statistic':
                 return self.database.statistic.get()
             case 'learned_count':

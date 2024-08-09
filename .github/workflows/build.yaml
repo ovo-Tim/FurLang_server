@@ -56,9 +56,10 @@ jobs:
         run: |
           mkdir build/main.dist/lemminflect
           mkdir build/main.dist/lemminflect/resources
-          wget -P build/main.dist/lemminflect/resources https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/lemma_lu.csv.gz
-          wget -P build/main.dist/lemminflect/resources https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/model_infl.pkl.gz
-          wget -P build/main.dist/lemminflect/resources https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/model_lemma.pkl.gz
+          curl -L -o build/main.dist/lemminflect/resources/lemma_lu.csv.gz https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/lemma_lu.csv.gz
+          curl -L -o build/main.dist/lemminflect/resources/model_infl.pkl.gz https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/model_infl.pkl.gz
+          curl -L -o build/main.dist/lemminflect/resources/model_lemma.pkl.gz https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/model_lemma.pkl.gz
+          curl -L -o build/main.dist/lemminflect/resources/lemma_overrides.csv https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/lemma_overrides.csv
 
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
