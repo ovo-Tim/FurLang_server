@@ -16,7 +16,7 @@ class statistic:
         atexit.register(self.save, force=True)
 
     def clean_old(self) -> None:
-        for i in self.data.keys():
+        for i in list(self.data.keys()):
             d = datetime.strptime(i, "%Y-%m-%d")
             if d < (datetime.now() - timedelta(days=7)):
                 del self.data[i]
