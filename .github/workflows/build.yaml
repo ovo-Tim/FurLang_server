@@ -59,17 +59,6 @@ jobs:
           curl -L -o build/main.dist/lemminflect/resources/model_lemma.pkl.gz https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/model_lemma.pkl.gz
           curl -L -o build/main.dist/lemminflect/resources/lemma_overrides.csv https://github.com/bjascob/LemmInflect/raw/master/lemminflect/resources/lemma_overrides.csv
 
-      - name: Compress binaries
-        uses: svenstaro/upx-action@v2
-        continue-on-error: true
-        with:
-          file: |
-            build/main.dist/*.bin
-            build/main.dist/*.exe
-          args: --ultra-brute
-          strip: false
-
-
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5
         with:
